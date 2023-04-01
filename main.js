@@ -2,10 +2,38 @@
 const EMPTY_HEART = '♡'
 const FULL_HEART = '♥'
 
+// Select the error modal and hide it by default
+const modal = document.getElementById('modal');
+modal.classList.add('hidden');
+
 // Your JavaScript code goes here!
+const likeButtons = document.querySelectorAll('.like');
 
+likeButtons.forEach(button => {
+  button.addEventListener('click', handleLike);
+});
 
-
+function handleLike(event) {
+  const button = event.target;
+  mimicServerCall()
+    .then(() => {
+      if (button.innerText === EMPTY_HEART) {
+        button.innerText = FULL_HEART;
+        button.classList.add('activated-heart');
+      } else {
+        button.innerText = EMPTY_HEART;
+        button.classList.remove('activated-heart');
+      }
+    })
+    .catch(error => {
+      const modalMessage = document.getElementById('modal-message');
+      modalMessage.innerText = error;
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 3000);
+    });
+}
 
 //------------------------------------------------------------------------------
 // Don't change the code below: this function mocks the server response
